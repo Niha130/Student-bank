@@ -41,7 +41,7 @@ function generateCaptcha() {
     document.getElementById("captchaValue").innerText = captchaValue;
 }
 
-// Login function
+// Login function with simulated SQL Injection vulnerability
 function login() {
     const usernameInput = document.getElementById("username").value.trim();
     const passwordInput = document.getElementById("password").value.trim();
@@ -57,12 +57,30 @@ function login() {
     const users = JSON.parse(localStorage.getItem("users"));
     let loggedIn = false;
 
+    // 🛑 Simulated SQL Injection bypass
+    if (
+        usernameInput.includes("' OR '1'='1") ||
+        passwordInput.includes("' OR '1'='1")
+    ) {
+        alert("SQL Injection detected, bypassing login!");
+        // Automatically log in as the first user (alice)
+        const firstAccount = Object.keys(users)[0];
+        const user = users[firstAccount];
+        localStorage.setItem("username", user.username);
+        localStorage.setItem("accountNo", firstAccount);
+        localStorage.setItem("balance", user.balance);
+        localStorage.setItem("role", user.role);
+        window.location.href = "dashboard.html";
+        return;
+    }
+
     for (const [accountNo, user] of Object.entries(users)) {
         if (user.username === usernameInput && user.password === passwordInput) {
             localStorage.setItem("username", usernameInput);
             localStorage.setItem("accountNo", accountNo);
             localStorage.setItem("balance", user.balance);
-localStorage.setItem("role", user.role);
+            localStorage.setItem("role", user.role);
+
             // Redirect based on role
             if (user.role === "admin") {
                 window.location.href = "admin_dashboard.html";
