@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Transaction History - Student Bank</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f7fa; margin: 0; }
+        .navbar {
+            background-color: #0d3c61; color: white; padding: 10px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .container { max-width: 800px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: center; }
+        th { background-color: #0d3c61; color: white; }
+        button { margin-top: 20px; padding: 10px 20px; background-color: #0d3c61; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #0a2f4a; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>STUDENT BANK - Transaction History</div>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <h2>Your Transaction History</h2>
+        <table id="transactionsTable">
+            <tr>
+                <th>Sender</th>
+                <th>Receiver</th>
+                <th>Amount</th>
+                <th>Date/Time</th>
+            </tr>
+        </table>
+        <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        function loadTransactions() {
+            const accountNo = localStorage.getItem("accountNo");
+            const transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+            const table = document.getElementById("transactionsTable");
+
+            let hasTransactions = false;
+
+            transactions.forEach(tx => {
+                if (tx.sender === accountNo || tx.receiver === accountNo) {
+                    const row = table.insertRow();
+                    row.insertCell(0).textContent = tx.sender;
+                    row.insertCell(1).textContent = tx.receiver;
+                    row.insertCell(2).textContent = "₹" + parseFloat(tx.amount.replace(/[^\d.-]/g, '')).toFixed(2);
+                    row.insertCell(3).textContent = tx.date;
+                    hasTransactions = true;
+                }
+            });
+
+            if (!hasTransactions) {
+                const row = table.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 4;
+                cell.textContent = "No transactions found for this account.";
+            }
+        }
+
+        window.onload = loadTransactions;
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fake Bank - View Account</title>
+</head>
+<body>
+  <h2>View Account Details (IDOR Demo)</h2>
+  <form action="idor.html" method="GET">
+    <label>Enter User ID to View Account:</label>
+    <input type="text" name="id" value="1">
+    <button type="submit">View</button>
+  </form>
+
+  <p>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id') || '1';
+      if (id == '1') {
+        document.write("Account for User 1: Balance $1000");
+      } else if (id == '2') {
+        document.write("Account for User 2: Balance $5000");
+      } else {
+        document.write("Invalid User ID.");
+      }
+    </script>
+  </p>
+
+  <p>Change the `id` parameter in the URL to view other users’ data (simulating IDOR).</p>
+</body>
+</html>
+

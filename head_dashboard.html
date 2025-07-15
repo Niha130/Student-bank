@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Student Bank - Head User Dashboard</title>
+</head>
+<body>
+    <h1>Head User Dashboard</h1>
+    <p>Welcome, <span id="username"></span></p>
+    <h2>Monitored User Accounts</h2>
+    <ul>
+        <li>alice - $2500.00</li>
+        <li>bob - $3200.00</li>
+    </ul>
+    <button onclick="logout()">Logout</button>
+
+<script>
+window.onload = function() {
+    const username = localStorage.getItem("username");
+    const role = localStorage.getItem("role");
+    if (role !== "head") {
+        alert("Access denied.");
+        window.location.href = "index.html";
+    }
+    document.getElementById("username").innerText = username;
+};
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transfer Money - Student Bank</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f5f7fa; text-align: center; margin: 0; }
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input, button { padding: 10px; margin: 10px; width: 80%; border-radius: 4px; border: 1px solid #ccc; }
+        button { background-color: #0d3c61; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0a2f4a; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Transfer Money</h2>
+        <input type="text" id="receiverAccountNo" placeholder="Receiver Account Number"><br>
+        <input type="number" id="amount" placeholder="Amount"><br>
+        <button onclick="transferMoney()">Transfer</button>
+        <p id="status"></p>
+        <button onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    </div>
+
+    <script>
+    function transferMoney() {
+        const senderAccountNo = localStorage.getItem("accountNo");
+        const receiverAccountNo = document.getElementById("receiverAccountNo").value.trim();
+        const amount = parseFloat(document.getElementById("amount").value.trim());
+
+        if (!senderAccountNo || !receiverAccountNo || isNaN(amount) || amount <= 0) {
+            document.getElementById("status").innerText = "Please enter valid details.";
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem("users"));
+        if (!users || !users[senderAccountNo]) {
+            document.getElementById("status").innerText = "Sender account not found. Please login again.";
+            return;
+        }
+        if (!users[receiverAccountNo]) {
+            document.getElementById("status").innerText = "Receiver account not found.";
+            return;
+        }
+
+        let senderBalance = parseFloat(users[senderAccountNo].balance);
+        let receiverBalance = parseFloat(users[receiverAccountNo].balance);
+
+        if (isNaN(senderBalance)) {
+            senderBalance = 0;
+        }
+        if (isNaN(receiverBalance)) {
+            receiverBalance = 0;
+        }
+
+        if (senderBalance < amount) {
+            document.getElementById("status").innerText = "Insufficient balance.";
+            return;
+        }
+
+        // Transfer funds
+        senderBalance -= amount;
+        receiverBalance += amount;
+
+        users[senderAccountNo].balance = senderBalance;
+        users[receiverAccountNo].balance = receiverBalance;
+
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("balance", senderBalance); // for dashboard display consistency
+
+        // Add transaction history
+        let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+        transactions.push({
+            sender: senderAccountNo,
+            receiver: receiverAccountNo,
+            amount: "₹" + amount.toFixed(2),
+            date: new Date().toLocaleString()
+        });
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        document.getElementById("status").innerText = "Transfer successful.";
+    }
+    </script>
+</body>
+</html>

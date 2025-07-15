@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Student Bank - Create Users</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 0; }
+        .navbar { background: #0b3e6f; color: white; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .navbar h1 { margin: 0; font-size: 20px; }
+        .navbar a { color: white; text-decoration: none; padding: 0 10px; }
+        .container { max-width: 400px; background: white; padding: 20px; margin: 20px auto; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .container h2 { color: #0b3e6f; text-align: center; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; }
+        button { background: #0b3e6f; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <h1>STUDENT BANK</h1>
+    <div>
+        <a href="index.html">Home</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Create 3 Users</h2>
+
+    <input type="text" id="username1" placeholder="Enter Username 1">
+    <input type="password" id="password1" placeholder="Enter Password 1">
+
+    <input type="text" id="username2" placeholder="Enter Username 2">
+    <input type="password" id="password2" placeholder="Enter Password 2">
+
+    <input type="text" id="username3" placeholder="Enter Username 3">
+    <input type="password" id="password3" placeholder="Enter Password 3">
+
+    <button onclick="createUsers()">Create Users</button>
+    <div id="result"></div>
+</div>
+
+<script>
+function createUsers() {
+    const usernames = [
+        document.getElementById("username1").value,
+        document.getElementById("username2").value,
+        document.getElementById("username3").value
+    ];
+
+    const passwords = [
+        document.getElementById("password1").value,
+        document.getElementById("password2").value,
+        document.getElementById("password3").value
+    ];
+
+    let output = "";
+
+    for (let i = 0; i < 3; i++) {
+        if (!usernames[i] || !passwords[i]) {
+            output += `<p style='color:red;'>User ${i+1}: Missing username or password.</p>`;
+        } else {
+            const accountNo = Math.floor(1000000000 + Math.random() * 9000000000);
+            const balance = "$" + (1000 + Math.floor(Math.random() * 4000)) + ".00";
+            output += `
+                <p>User <b>${usernames[i]}</b> created successfully!</p>
+                <p>Account Number: <b>${accountNo}</b></p>
+                <p>Balance: <b>${balance}</b></p>
+                <hr>
+            `;
+        }
+    }
+
+    output += "<p><i>(Note: This data is not stored permanently in this demo environment.)</i></p>";
+    document.getElementById("result").innerHTML = output;
+}
+</script>
+
+</body>
+</html>
+
